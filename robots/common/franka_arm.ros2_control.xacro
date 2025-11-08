@@ -16,7 +16,7 @@
     <ros2_control name="${arm_prefix}FrankaHardwareInterface" type="system" is_async="${is_async}">
         <xacro:if value="${is_async}">
           <properties>
-            <async scheduling_policy="detached" print_warnings="true" thread_priority="${thread_priority}" manage_overruns="false"/>
+            <async scheduling_policy="slave" print_warnings="true" thread_priority="${thread_priority}" manage_overruns="false"/>
           </properties>
         </xacro:if>
         <hardware>

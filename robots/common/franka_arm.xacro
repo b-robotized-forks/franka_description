@@ -21,8 +21,8 @@
     </xacro:if>
 
     <xacro:unless value="${not connected_to}">
-      <link name="${connected_to}">
-      </link>
+      <!-- <link name="${connected_to}">
+      </link> -->
       <joint name="${prefix}${connected_to}_joint" type="fixed">
         <parent link="${connected_to}"/>
         <child link="${prefix}link0"/>
