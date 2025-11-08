@@ -15,6 +15,11 @@
                       special_connection:=''
                       gazebo:='false'
                       with_sc:='false'
+                      ros2_control:=false
+                      robot_ip:=''
+                      use_fake_hardware:=false
+                      fake_sensor_commands:=false
+                      gazebo_effort:=false
                       no_prefix:='false'
                       arm_prefix:=''
                       description_pkg:='franka_description'
@@ -150,6 +155,20 @@
         <xacro:gazebo-friction link="${arm_prefix}${robot_type}_leftfinger" mu="1.13"/>
         <xacro:gazebo-friction link="${arm_prefix}${robot_type}_rightfinger" mu="1.13"/>
       </xacro:if>
+    </xacro:if>
+
+    <xacro:if value="${ros2_control}">
+      <xacro:include filename="$(find franka_description)/robots/common/franka_arm.ros2_control.xacro"/>
+      <xacro:franka_arm_ros2_control
+          arm_id="${robot_type}"
+          robot_ip="${robot_ip}"
+          use_fake_hardware="${use_fake_hardware}"
+          fake_sensor_commands="${fake_sensor_commands}"
+          gazebo="${gazebo}"
+          hand="${hand}"
+          gazebo_effort="${gazebo_effort}"
+          arm_prefix="${arm_prefix}"
+      />
     </xacro:if>
 
   </xacro:macro>
