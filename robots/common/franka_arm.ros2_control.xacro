@@ -13,10 +13,12 @@
                  scheduling_policy:=detached">
 
     <xacro:property name="arm_prefix_modified" value="${'' if arm_prefix == '' else arm_prefix + '_'}" />
-    <ros2_control name="${arm_prefix_modified}FrankaHardwareInterface" type="system" is_async="true" rw_rate="1000">
-        <properties>
-            <async scheduling_policy="${scheduling_policy}" print_warnings="true" thread_priority="30"/>
-        </properties>
+    <ros2_control name="${arm_prefix_modified}FrankaHardwareInterface" type="system" is_async="${use_fake_hardware == 0}" rw_rate="1000">
+        <xacro:if value="${use_fake_hardware == 0 and gazebo == 0}">
+            <properties>
+                <async scheduling_policy="${scheduling_policy}" print_warnings="true" thread_priority="30"/>
+            </properties>
+        </xacro:if>
         <hardware>
           <param name="version">0.1.0</param>
           <param name="arm_id">${arm_id}</param>
