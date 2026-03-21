@@ -6,7 +6,7 @@
         <xacro:include filename="$(find franka_description)/robots/common/group_definition.xacro"/>
         <xacro:group_definition prefix="${prefix}" group_name="${prefix}arm" tip_link="${prefix}link8"/>
 
-        <virtual_joint name="virtual_joint" type="fixed" parent_frame="world" child_link="base"/>
+        <!-- <virtual_joint name="virtual_joint" type="fixed" parent_frame="world" child_link="base"/> -->
         <disable_collisions link1="${prefix}link0" link2="${prefix}link1" reason="Adjacent"/>
         <disable_collisions link1="${prefix}link0" link2="${prefix}link2" reason="Never"/>
         <disable_collisions link1="${prefix}link0" link2="${prefix}link3" reason="Never"/>
