@@ -27,7 +27,8 @@
                       no_prefix:='false'
                       arm_prefix:=''
                       description_pkg:='franka_description'
-                      connected_to:='base'">
+                      connected_to:='base'
+                      scheduling_policy:='detached'">
                       
     <xacro:include filename="$(find franka_description)/robots/common/utils.xacro" />
 
@@ -162,6 +163,7 @@
           hand="${hand}"
           gazebo_effort="${gazebo_effort}"
           arm_prefix="${arm_prefix}"
+          scheduling_policy="${scheduling_policy}"
       />
     </xacro:if>
 
