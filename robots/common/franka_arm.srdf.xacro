@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
 
-    <xacro:macro name="franka_arm_srdf" params="arm_id hand:='true' ee_id:=franka_hand arm_prefix='' no_prefix='false'">
+    <xacro:macro name="franka_arm_srdf" params="arm_id hand:='true' ee_id:=franka_hand arm_prefix='' no_prefix='false' tip_link='link8'">
         <xacro:property name="prefix" value="${'' if no_prefix else arm_prefix + arm_id + '_'}" />
         <xacro:include filename="$(find franka_description)/robots/common/group_definition.xacro"/>
-        <xacro:group_definition prefix="${prefix}" group_name="${prefix}arm" tip_link="${prefix}link8"/>
+        <xacro:group_definition prefix="${prefix}" group_name="${prefix}arm" tip_link="${prefix}${tip_link}"/>
         
         <disable_collisions link1="${prefix}link0" link2="${prefix}link1" reason="Adjacent"/>
         <disable_collisions link1="${prefix}link0" link2="${prefix}link2" reason="Never"/>
