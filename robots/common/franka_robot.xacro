@@ -31,7 +31,8 @@
                       connected_to:='base'
                       is_async:=false
                       thread_priority:=50
-                      scheduling_policy:='detached'">
+                      scheduling_policy:='detached'
+                      mesh_model:=''">
                       
     <xacro:include filename="$(find franka_description)/robots/common/utils.xacro" />
 
@@ -52,6 +53,7 @@
       dynamics="${dynamics}"
       with_sc="${with_sc}"
       connected_to="${connected_to}"
+      mesh_model="${mesh_model}"
     />
 
     <xacro:if value="${hand and ee_id == 'franka_hand'}">

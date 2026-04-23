@@ -33,18 +33,19 @@
   <!-- rpy:   Rotation of the *_sc link relative to parent [rad]  -->
   <!-- self_collision_geometries:  self <collision> models        -->
   <!-- ========================================================== -->
-  <xacro:macro name="link_with_sc" params="name no_prefix:='false' rpy:='0 0 0' **self_collision_geometries gazebo:=false with_sc:=false with_accelerometers:=false">
+  <xacro:macro name="link_with_sc" params="name no_prefix:='false' rpy:='0 0 0' **self_collision_geometries gazebo:=false with_sc:=false with_accelerometers:=false mesh_model:=''">
     <xacro:property name="prefix" value="${'' if no_prefix else arm_prefix + robot_type + '_'}" />
+    <xacro:property name="mesh_id" value="${mesh_model if mesh_model else robot_type}" />
     <!-- sub-link defining detailed meshes for collision with environment -->
     <link name="${prefix}${name}">
       <visual name="${prefix}${name}_visual">
         <geometry>
-          <mesh filename="package://${description_pkg}/meshes/robots/${robot_type}/visual/${name}.dae" />
+          <mesh filename="package://${description_pkg}/meshes/robots/${mesh_id}/visual/${name}.dae" />
         </geometry>
       </visual>
       <collision name="${prefix}${name}_collision">
         <geometry>
-          <mesh filename="package://franka_description/meshes/robots/${robot_type}/collision/${name}.stl" />
+          <mesh filename="package://franka_description/meshes/robots/${mesh_id}/collision/${name}.stl" />
         </geometry>
       </collision>
       <xacro:franka-inertials name="${name}" />
