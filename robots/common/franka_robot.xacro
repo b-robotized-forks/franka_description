@@ -24,7 +24,8 @@
                       arm_prefix:=''
                       description_pkg:='franka_description'
                       connected_to:='base'
-                      scheduling_policy:='detached'">
+                      scheduling_policy:='detached'
+                      mesh_model:=''">
                       
     <xacro:include filename="$(find franka_description)/robots/common/utils.xacro" />
 
@@ -40,6 +41,7 @@
       gazebo="${gazebo}"
       with_sc="${with_sc}"
       connected_to="${connected_to}"
+      mesh_model="${mesh_model}"
     />
 
     <xacro:if value="${hand and ee_id== 'franka_hand'}">
