@@ -67,6 +67,8 @@
     </joint>
   </xacro:if>
 
+  <link name="base" />
+
   <xacro:franka_robot robot_type="fr3"
     gazebo="$(arg gazebo)"
     hand="$(arg hand)"

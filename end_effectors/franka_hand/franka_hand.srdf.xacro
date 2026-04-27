@@ -4,6 +4,8 @@
 
     <group name="${prefix}hand">
       <link name="${prefix}hand"/>
+      <link name="${prefix}hand_tcp"/>
+      <link name="finger_tip_tcp"/>
       <link name="${prefix}leftfinger"/>
       <link name="${prefix}rightfinger"/>
       <joint name="${prefix}finger_joint1"/>
