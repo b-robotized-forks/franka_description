@@ -80,6 +80,8 @@
     </joint>
   </xacro:if>
 
+  <link name="base" />
+
   <xacro:franka_robot robot_type="fr3"
                       joint_limits="${xacro.load_yaml('$(find franka_description)/robots/fr3/joint_limits.yaml')}"
                       inertials="${xacro.load_yaml('$(find franka_description)/robots/fr3/inertials.yaml')}"
