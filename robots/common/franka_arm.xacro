@@ -19,7 +19,7 @@
     <xacro:property name="dynamics" value="${xacro.load_yaml('$(find franka_description)/robots/' + robot_type + '/dynamics.yaml')}"/>
 
     <!-- Define a property that defaults to 'arm_prefix_robot_type' concatenated with an underscore if 'no_prefix' is not set -->
-    <xacro:property name="prefix" value="${'' if no_prefix else arm_prefix + robot_type + '_'}" />
+    <xacro:property name="prefix" value="${'' if no_prefix else arm_prefix + '_'}" />
     <xacro:property name="with_accelerometers" value="${'false' if accelerometer_config == 'none' else 'true'}" />
 
     <xacro:if value="${gazebo and connected_to == 'base'}">
