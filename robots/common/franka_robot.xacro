@@ -17,7 +17,7 @@
                       with_sc:='false'
                       ros2_control:=false
                       robot_ip:=''
-                      use_fake_hardware:=false
+                      ros2_control_hardware_type:=mock
                       fake_sensor_commands:=false
                       gazebo_effort:=false
                       no_prefix:='false'
@@ -165,7 +165,7 @@
       <xacro:franka_arm_ros2_control
           arm_id="${robot_type}"
           robot_ip="${robot_ip}"
-          use_fake_hardware="${use_fake_hardware}"
+          ros2_control_hardware_type="${ros2_control_hardware_type}"
           fake_sensor_commands="${fake_sensor_commands}"
           gazebo="${gazebo}"
           hand="${hand}"
