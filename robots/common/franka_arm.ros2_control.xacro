@@ -39,8 +39,7 @@
           <!-- Isaac Sim-->
           <xacro:if value="${ros2_control_hardware_type == 'isaac' and gazebo == 0}">
             <plugin>topic_based_ros2_control/TopicBasedSystem</plugin>
-            <param name="joint_commands_topic">/isaac/command/left_robot</param>
-            <param name="joint_commands_topic">/isaac/command/right_robot</param>
+            <param name="joint_commands_topic">/isaac/command/${arm_prefix_modified}robot</param>
             <param name="joint_states_topic">/isaac/joint_states</param>
           </xacro:if>
 
@@ -98,7 +97,7 @@
       </xacro:macro>
 
       <!-- Franka-specific GPIO interfaces: not supported by mock_components/GenericSystem -->
-      <xacro:if value="${ros2_control_hardware_type == 'real' or ros2_control_hardware_type == 'isaac'}">
+      <xacro:if value="${ros2_control_hardware_type == 'real' or ros2_control_hardware_type == 'mock'}">
         <!-- Cartesian velocity interfaces -->
         <xacro:general_purpose_io prefix="${arm_prefix_modified}vx" command_interface="cartesian_velocity" index="0"/>
         <xacro:general_purpose_io prefix="${arm_prefix_modified}vy" command_interface="cartesian_velocity" index="1"/>
