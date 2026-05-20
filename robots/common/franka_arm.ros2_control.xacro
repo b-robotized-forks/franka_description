@@ -39,8 +39,9 @@
           <!-- Isaac Sim-->
           <xacro:if value="${ros2_control_hardware_type == 'isaac' and gazebo == 0}">
             <plugin>topic_based_ros2_control/TopicBasedSystem</plugin>
-            <param name="joint_commands_topic">/isaac_joint_commands</param>
-            <param name="joint_states_topic">/isaac_joint_states</param>
+            <param name="joint_commands_topic">/isaac/command/left_robot</param>
+            <param name="joint_commands_topic">/isaac/command/right_robot</param>
+            <param name="joint_states_topic">/isaac/joint_states</param>
           </xacro:if>
 
           <!--- Real Hardware -->
@@ -96,26 +97,29 @@
         </gpio>
       </xacro:macro>
 
-      <!-- Cartesian velocity interfaces -->
-      <xacro:general_purpose_io prefix="${arm_prefix_modified}vx" command_interface="cartesian_velocity" index="0"/>
-      <xacro:general_purpose_io prefix="${arm_prefix_modified}vy" command_interface="cartesian_velocity" index="1"/>
-      <xacro:general_purpose_io prefix="${arm_prefix_modified}vz" command_interface="cartesian_velocity" index="2"/>
-      <xacro:general_purpose_io prefix="${arm_prefix_modified}wx" command_interface="cartesian_velocity" index="3"/>
-      <xacro:general_purpose_io prefix="${arm_prefix_modified}wy" command_interface="cartesian_velocity" index="4"/>
-      <xacro:general_purpose_io prefix="${arm_prefix_modified}wz" command_interface="cartesian_velocity" index="5"/>
+      <!-- Franka-specific GPIO interfaces: not supported by mock_components/GenericSystem -->
+      <xacro:if value="${ros2_control_hardware_type == 'real' or ros2_control_hardware_type == 'isaac'}">
+        <!-- Cartesian velocity interfaces -->
+        <xacro:general_purpose_io prefix="${arm_prefix_modified}vx" command_interface="cartesian_velocity" index="0"/>
+        <xacro:general_purpose_io prefix="${arm_prefix_modified}vy" command_interface="cartesian_velocity" index="1"/>
+        <xacro:general_purpose_io prefix="${arm_prefix_modified}vz" command_interface="cartesian_velocity" index="2"/>
+        <xacro:general_purpose_io prefix="${arm_prefix_modified}wx" command_interface="cartesian_velocity" index="3"/>
+        <xacro:general_purpose_io prefix="${arm_prefix_modified}wy" command_interface="cartesian_velocity" index="4"/>
+        <xacro:general_purpose_io prefix="${arm_prefix_modified}wz" command_interface="cartesian_velocity" index="5"/>
 
-      <!-- Cartesian pose interfaces, in total 16 interfaces -->
-      <xacro:macro name="loop" params="i">
-        <xacro:unless value="${i == 16}">
-          <xacro:general_purpose_io prefix="${arm_prefix_modified}${i}" command_interface="cartesian_pose_command" index="${i}"/>
-          <xacro:loop i="${i+1}"/>
-        </xacro:unless>
-      </xacro:macro>
-      <xacro:loop i="0"/>
+        <!-- Cartesian pose interfaces, in total 16 interfaces -->
+        <xacro:macro name="loop" params="i">
+          <xacro:unless value="${i == 16}">
+            <xacro:general_purpose_io prefix="${arm_prefix_modified}${i}" command_interface="cartesian_pose_command" index="${i}"/>
+            <xacro:loop i="${i+1}"/>
+          </xacro:unless>
+        </xacro:macro>
+        <xacro:loop i="0"/>
 
-      <!-- Elbow command interfaces -->
-      <xacro:general_purpose_io prefix="${arm_prefix_modified}joint_3_position" command_interface="elbow_command" index="0"/>
-      <xacro:general_purpose_io prefix="${arm_prefix_modified}joint_4_sign" command_interface="elbow_command" index="1"/>
+        <!-- Elbow command interfaces -->
+        <xacro:general_purpose_io prefix="${arm_prefix_modified}joint_3_position" command_interface="elbow_command" index="0"/>
+        <xacro:general_purpose_io prefix="${arm_prefix_modified}joint_4_sign" command_interface="elbow_command" index="1"/>
+      </xacro:if>
 
     </ros2_control>
     <xacro:if value="${gazebo}">
