@@ -121,6 +121,26 @@
       </xacro:if>
 
     </ros2_control>
+
+    <!-- Separate hardware component for Franka's tool FT sensor values published by Isaac Sim -->
+    <xacro:if value="${ros2_control_hardware_type == 'isaac'}">
+      <ros2_control name="${arm_prefix_modified}FrankaFtSensorInterface" type="sensor">
+        <hardware>
+          <plugin>topic_based_ft_ros2_control/TopicBasedFtSensor</plugin>
+          <param name="wrench_topic">/isaac/ft_sensor/${arm_prefix_modified}wrench</param>
+        </hardware>
+
+        <sensor name="${arm_prefix_modified}tool_ft_sensor">
+          <state_interface name="force.x"/>
+          <state_interface name="force.y"/>
+          <state_interface name="force.z"/>
+          <state_interface name="torque.x"/>
+          <state_interface name="torque.y"/>
+          <state_interface name="torque.z"/>
+        </sensor>
+      </ros2_control>
+    </xacro:if>
+
     <xacro:if value="${gazebo}">
       <gazebo>
         <plugin filename="franka_ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
