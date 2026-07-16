@@ -10,14 +10,16 @@
                  hand:=false
                  gazebo_effort:=false
                  arm_prefix:=''
-                 scheduling_policy:=detached">
+                 scheduling_policy:=detached
+                 thread_priority:=30
+                 affinity:=''">
     
     <xacro:property name="arm_prefix_modified" value="${'' if arm_prefix == '' else arm_prefix + '_'}" />
     
     <ros2_control name="${arm_prefix_modified}FrankaHardwareInterface" type="system" is_async="${ros2_control_hardware_type == 'real'}" rw_rate="1000">
         <xacro:if value="${ros2_control_hardware_type == 'real' and gazebo == 0}">
             <properties>
-                <async scheduling_policy="${scheduling_policy}" print_warnings="true" thread_priority="30"/>
+                <async scheduling_policy="${scheduling_policy}" print_warnings="true" thread_priority="${thread_priority}" affinity="${affinity}"/>
             </properties>
         </xacro:if>
         <hardware>

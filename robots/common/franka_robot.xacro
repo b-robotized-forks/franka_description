@@ -25,6 +25,8 @@
                       description_pkg:='franka_description'
                       connected_to:='base'
                       scheduling_policy:='detached'
+                      thread_priority:=30
+                      affinity:=''
                       mesh_model:=''">
                       
     <xacro:include filename="$(find franka_description)/robots/common/utils.xacro" />
@@ -172,6 +174,8 @@
           gazebo_effort="${gazebo_effort}"
           arm_prefix="${arm_prefix}"
           scheduling_policy="${scheduling_policy}"
+          thread_priority="${thread_priority}"
+          affinity="${affinity}"
       />
     </xacro:if>
 
