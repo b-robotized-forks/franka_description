@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
 <xacro:macro name="franka_arm_ros2_control"
-         params="arm_id
+         params="robot_type
                  robot_ip
                  ros2_control_hardware_type:=mock
                  fake_sensor_commands:=false
@@ -23,8 +23,8 @@
             </properties>
         </xacro:if>
         <hardware>
-          <param name="version">0.1.0</param>
-          <param name="arm_id">${arm_id}</param>
+          <param name="version">1.1.0</param>
+          <param name="robot_type">${robot_type}</param>
           <param name="prefix">${arm_prefix_modified}</param>
           <!--- Mock Hardware -->
           <xacro:if value="${ros2_control_hardware_type == 'mock' and gazebo == 0}">
@@ -52,6 +52,18 @@
             <param name="arm_prefix">${arm_prefix_modified}</param>
           </xacro:if>
         </hardware>
+
+        <!-- Force/torque sensor: estimated external wrench in stiffness frame (K_F_ext_hat_K) -->
+        <xacro:if value="${ros2_control_hardware_type == 'real'}">
+          <sensor name="${arm_prefix_modified}tcp">
+            <state_interface name="force.x"/>
+            <state_interface name="force.y"/>
+            <state_interface name="force.z"/>
+            <state_interface name="torque.x"/>
+            <state_interface name="torque.y"/>
+            <state_interface name="torque.z"/>
+          </sensor>
+        </xacro:if>
 
       <!-- Joint position, velocity and effort interfaces -->
       <xacro:macro name="configure_joint" params="joint_name initial_position">
