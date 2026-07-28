@@ -12,13 +12,14 @@
                  arm_prefix:=''
                  is_async:=false
                  thread_priority:=50
-                 scheduling_policy:=detached">
+                 scheduling_policy:=detached
+                 cpu_affinity:=''">
     
     <xacro:property name="arm_prefix_modified" value="${'' if arm_prefix == '' else arm_prefix + '_'}" />
     <ros2_control name="${arm_prefix_modified}FrankaHardwareInterface" type="system" is_async="${is_async}" rw_rate="1000">
         <xacro:if value="${is_async}">
             <properties>
-                <async scheduling_policy="${scheduling_policy}" print_warnings="true" thread_priority="${thread_priority}"/>
+                <async scheduling_policy="${scheduling_policy}" print_warnings="true" thread_priority="${thread_priority}" affinity="${affinity}"/>
             </properties>
         </xacro:if>
         <hardware>
@@ -40,8 +41,8 @@
           <!-- Isaac Sim-->
           <xacro:if value="${ros2_control_hardware_type == 'isaac' and gazebo == 0}">
             <plugin>topic_based_ros2_control/TopicBasedSystem</plugin>
-            <param name="joint_commands_topic">/isaac_joint_commands</param>
-            <param name="joint_states_topic">/isaac_joint_states</param>
+            <param name="joint_commands_topic">/isaac/command/${arm_prefix_modified}robot</param>
+            <param name="joint_states_topic">/isaac/joint_states</param>
           </xacro:if>
 
           <!--- Real Hardware -->
@@ -97,28 +98,51 @@
         </gpio>
       </xacro:macro>
 
-      <!-- Cartesian velocity interfaces -->
-      <xacro:general_purpose_io prefix="${arm_prefix_modified}vx" command_interface="cartesian_velocity" index="0"/>
-      <xacro:general_purpose_io prefix="${arm_prefix_modified}vy" command_interface="cartesian_velocity" index="1"/>
-      <xacro:general_purpose_io prefix="${arm_prefix_modified}vz" command_interface="cartesian_velocity" index="2"/>
-      <xacro:general_purpose_io prefix="${arm_prefix_modified}wx" command_interface="cartesian_velocity" index="3"/>
-      <xacro:general_purpose_io prefix="${arm_prefix_modified}wy" command_interface="cartesian_velocity" index="4"/>
-      <xacro:general_purpose_io prefix="${arm_prefix_modified}wz" command_interface="cartesian_velocity" index="5"/>
+      <!-- Franka-specific GPIO interfaces: not supported by mock_components/GenericSystem -->
+      <xacro:if value="${ros2_control_hardware_type == 'real' or ros2_control_hardware_type == 'mock'}">
+        <!-- Cartesian velocity interfaces -->
+        <xacro:general_purpose_io prefix="${arm_prefix_modified}vx" command_interface="cartesian_velocity" index="0"/>
+        <xacro:general_purpose_io prefix="${arm_prefix_modified}vy" command_interface="cartesian_velocity" index="1"/>
+        <xacro:general_purpose_io prefix="${arm_prefix_modified}vz" command_interface="cartesian_velocity" index="2"/>
+        <xacro:general_purpose_io prefix="${arm_prefix_modified}wx" command_interface="cartesian_velocity" index="3"/>
+        <xacro:general_purpose_io prefix="${arm_prefix_modified}wy" command_interface="cartesian_velocity" index="4"/>
+        <xacro:general_purpose_io prefix="${arm_prefix_modified}wz" command_interface="cartesian_velocity" index="5"/>
 
-      <!-- Cartesian pose interfaces, in total 16 interfaces -->
-      <xacro:macro name="loop" params="i">
-        <xacro:unless value="${i == 16}">
-          <xacro:general_purpose_io prefix="${arm_prefix_modified}${i}" command_interface="cartesian_pose_command" index="${i}"/>
-          <xacro:loop i="${i+1}"/>
-        </xacro:unless>
-      </xacro:macro>
-      <xacro:loop i="0"/>
+        <!-- Cartesian pose interfaces, in total 16 interfaces -->
+        <xacro:macro name="loop" params="i">
+          <xacro:unless value="${i == 16}">
+            <xacro:general_purpose_io prefix="${arm_prefix_modified}${i}" command_interface="cartesian_pose_command" index="${i}"/>
+            <xacro:loop i="${i+1}"/>
+          </xacro:unless>
+        </xacro:macro>
+        <xacro:loop i="0"/>
 
-      <!-- Elbow command interfaces -->
-      <xacro:general_purpose_io prefix="${arm_prefix_modified}joint_3_position" command_interface="elbow_command" index="0"/>
-      <xacro:general_purpose_io prefix="${arm_prefix_modified}joint_4_sign" command_interface="elbow_command" index="1"/>
+        <!-- Elbow command interfaces -->
+        <xacro:general_purpose_io prefix="${arm_prefix_modified}joint_3_position" command_interface="elbow_command" index="0"/>
+        <xacro:general_purpose_io prefix="${arm_prefix_modified}joint_4_sign" command_interface="elbow_command" index="1"/>
+      </xacro:if>
 
     </ros2_control>
+
+    <!-- Separate hardware component for Franka's tool FT sensor values published by Isaac Sim -->
+    <xacro:if value="${ros2_control_hardware_type == 'isaac'}">
+      <ros2_control name="${arm_prefix_modified}FrankaFtSensorInterface" type="sensor">
+        <hardware>
+          <plugin>topic_based_ft_ros2_control/TopicBasedFtSensor</plugin>
+          <param name="wrench_topic">/isaac/ft_sensor/${arm_prefix_modified}wrench</param>
+        </hardware>
+
+        <sensor name="${arm_prefix_modified}tool_ft_sensor">
+          <state_interface name="force.x"/>
+          <state_interface name="force.y"/>
+          <state_interface name="force.z"/>
+          <state_interface name="torque.x"/>
+          <state_interface name="torque.y"/>
+          <state_interface name="torque.z"/>
+        </sensor>
+      </ros2_control>
+    </xacro:if>
+
     <xacro:if value="${gazebo}">
       <gazebo>
         <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
