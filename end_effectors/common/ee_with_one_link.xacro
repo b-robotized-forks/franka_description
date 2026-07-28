@@ -4,7 +4,7 @@
   <xacro:macro name="ee_with_one_link" params="connected_to:='' robot_type arm_prefix:='' ee_id ee_inertials rpy_ee:='0 0 0' xyz_ee:='0 0 0' tcp_xyz:='0 0 0' tcp_rpy:='0 0 0' safety_distance:=0 gazebo:=false description_pkg:=franka_description with_sc:=false">
     <xacro:property name="ee_prefix" default="robot_"/>
     <xacro:unless value="${robot_type == ''}">
-      <xacro:property name="ee_prefix" value="${arm_prefix}${robot_type}_" />
+      <xacro:property name="ee_prefix" value="${arm_prefix}" />
     </xacro:unless>
     <xacro:unless value="${connected_to == ''}">
       <joint name="${ee_prefix}${ee_id}_joint" type="fixed">
