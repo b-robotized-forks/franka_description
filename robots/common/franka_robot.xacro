@@ -160,10 +160,9 @@
           gazebo_effort="${gazebo_effort}"
           arm_prefix="${arm_prefix}"
           is_async="${is_async}"
-          thread_priority="${thread_priority}"
           scheduling_policy="${scheduling_policy}"
           thread_priority="${thread_priority}"
-          affinity="${affinity}"
+          cpu_affinity="${cpu_affinity}"
       />
     </xacro:if>
 
