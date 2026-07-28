@@ -4,7 +4,7 @@
 <xacro:macro name="franka_arm_ros2_control"
          params="robot_type
                  robot_ip
-                 use_fake_hardware:=false
+                 ros2_control_hardware_type:=mock
                  fake_sensor_commands:=false
                  gazebo:=false
                  hand:=false
@@ -13,6 +13,7 @@
                  is_async:=false
                  thread_priority:=50
                  scheduling_policy:=detached">
+    
     <xacro:property name="arm_prefix_modified" value="${'' if arm_prefix == '' else arm_prefix + '_'}" />
     <ros2_control name="${arm_prefix_modified}FrankaHardwareInterface" type="system" is_async="${is_async}" rw_rate="1000">
         <xacro:if value="${is_async}">
@@ -24,17 +25,27 @@
           <param name="version">1.0.0</param>
           <param name="robot_type">${robot_type}</param>
           <param name="prefix">${arm_prefix_modified}</param>
-          <xacro:if value="${use_fake_hardware}">
+          <!--- Mock Hardware -->
+          <xacro:if value="${ros2_control_hardware_type == 'mock' and gazebo == 0}">
             <plugin>mock_components/GenericSystem</plugin>
             <param name="fake_sensor_commands">${fake_sensor_commands}</param>
             <param name="state_following_offset">0.0</param>
           </xacro:if>
 
+          <!-- Gazebo Sim-->
           <xacro:if value="${gazebo}">
             <plugin>gz_ros2_control/GazeboSimSystem</plugin>
           </xacro:if>
 
-          <xacro:if value="${use_fake_hardware == 0 and gazebo == 0}">
+          <!-- Isaac Sim-->
+          <xacro:if value="${ros2_control_hardware_type == 'isaac' and gazebo == 0}">
+            <plugin>topic_based_ros2_control/TopicBasedSystem</plugin>
+            <param name="joint_commands_topic">/isaac_joint_commands</param>
+            <param name="joint_states_topic">/isaac_joint_states</param>
+          </xacro:if>
+
+          <!--- Real Hardware -->
+          <xacro:if value="${ros2_control_hardware_type == 'real' and gazebo == 0}">
             <plugin>franka_hardware/FrankaHardwareInterface</plugin>
             <param name="robot_ip">${robot_ip}</param>
             <param name="arm_prefix">${arm_prefix_modified}</param>
@@ -59,8 +70,9 @@
           <state_interface name="position">
             <param name="initial_value">${initial_position}</param>
           </state_interface>
-          <state_interface name="velocity"/>
+          <state_interface name="velocity">
             <param name="initial_value">0.0</param>
+          </state_interface>
           <state_interface name="effort"/>
         </joint>
       </xacro:macro>
@@ -73,7 +85,7 @@
       <xacro:configure_joint joint_name="${arm_prefix_modified}joint5" initial_position="0.0"/>
       <xacro:configure_joint joint_name="${arm_prefix_modified}joint6" initial_position="${pi/2}"/>
       <xacro:configure_joint joint_name="${arm_prefix_modified}joint7" initial_position="${pi/4}"/>
-      <xacro:if value="${gazebo and hand}">
+      <xacro:if value="${ros2_control_hardware_type == 'mock' and hand}">
         <xacro:configure_joint joint_name="${arm_prefix_modified}finger_joint1" initial_position="0.0" />
       </xacro:if>
 

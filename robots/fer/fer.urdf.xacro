@@ -52,8 +52,23 @@
   <!-- Should fake sensors be used? -->
   <xacro:arg name="fake_sensor_commands" default="false" />
 
+  <!-- Is the robot being controlled with ros2_control?" -->
+  <xacro:arg name="ros2_control" default="false" />
+
+  <!-- IP address or hostname of the robot" -->
+  <xacro:arg name="robot_ip" default="" />
+
+  <!-- Hardware type: mock, real, isaac -->
+  <xacro:arg name="ros2_control_hardware_type" default="mock" />
+
+  <!-- Should fake sensors be used? -->
+  <xacro:arg name="fake_sensor_commands" default="false" />
+
   <!-- Should the robot be spawned in Gazebo?" -->
   <xacro:arg name="gazebo" default="false" />
+
+  <!-- Should the robot be spawned in Gazebo with effort interfaces?" -->
+  <xacro:arg name="gazebo_effort" default="false" />
 
   <!-- Should the robot be spawned in Gazebo with effort interfaces?" -->
   <xacro:arg name="gazebo_effort" default="false" />
@@ -97,7 +112,7 @@
                       with_sc="$(arg with_sc)"
                       ros2_control="$(arg ros2_control)"
                       robot_ip="$(arg robot_ip)"
-                      use_fake_hardware="$(arg use_fake_hardware)"
+                      ros2_control_hardware_type="$(arg ros2_control_hardware_type)"
                       fake_sensor_commands="$(arg fake_sensor_commands)"
                       gazebo_effort="$(arg gazebo_effort)"
                       no_prefix="$(arg no_prefix)"
