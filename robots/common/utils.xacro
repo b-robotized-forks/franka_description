@@ -34,7 +34,7 @@
   <!-- self_collision_geometries:  self <collision> models        -->
   <!-- ========================================================== -->
   <xacro:macro name="link_with_sc" params="name no_prefix:='false' rpy:='0 0 0' **self_collision_geometries gazebo:=false with_sc:=false with_accelerometers:=false mesh_model:=''">
-    <xacro:property name="prefix" value="${'' if no_prefix else arm_prefix + '_'}" />
+    <xacro:property name="prefix" value="${'' if no_prefix or arm_prefix == '' else arm_prefix + '_'}" />
     <xacro:property name="mesh_id" value="${mesh_model if mesh_model else robot_type}" />
     <!-- sub-link defining detailed meshes for collision with environment -->
     <link name="${prefix}${name}">
