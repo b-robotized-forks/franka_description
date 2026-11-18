@@ -70,7 +70,7 @@
     <material id="a91e1b0a-02af-4695-805d-c6f8d1d5aa37" name="Material-Metal">
       <instance_effect url="#fx-a91e1b0a-02af-4695-805d-c6f8d1d5aa37" />
     </material>
-    <material id="a0000000-0000-0000-0000-000000000000">
+    <material id="a0000000-0000-0000-0000-000000000000" name="Material-White">
       <instance_effect url="#fx-a0000000-0000-0000-0000-000000000000" />
     </material>
     <material id="a07fb129-0072-4995-8a7b-d6d7d35ac5e6" name="Material-Plastic">
